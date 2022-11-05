@@ -1,16 +1,15 @@
-FROM python:3.8-buster
+FROM node:16-alpine as builder
 
-RUN groupadd -r HNG && useradd -r -g HNG HNG
-
-RUN chsh -s /usr/sbin/nologin root
-
-WORKDIR /usr/api
-
-COPY requirements.txt requirements.txt 
-RUN pip install --upgrade pip && pip install -r requirements.txt
+WORKDIR /app
 
 COPY . .
 
-EXPOSE 8000
+RUN npm i
 
-CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+RUN npm run build
+
+ENV NODE_ENV production
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
