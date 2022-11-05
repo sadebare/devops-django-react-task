@@ -88,7 +88,7 @@ npm run build
   + Clone the the source code on the EC2 and chage the directory to the just cloned application after which you run:
 
         docker-compose up -d
-  + Now we can access our application with the EC2 public address or <ip-address>:3000 since we exposed the app on port *80* through nginx and *3000* through the the react application
+  + Now we can access our application with the EC2 public address or <ip-address:3000> since we exposed the app on port *80* through nginx and *3000* through the the react application
   ![port80](./port80.png)
   ![port3000](./port3000.png)
 
