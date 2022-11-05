@@ -1,25 +1,16 @@
-FROM node:18-alpine as builder
+FROM python:3.8-buster
 
-COPY package.json package-lock.json ./
+RUN groupadd -r HNG && useradd -r -g HNG HNG
 
-RUN npm install && mkdir /react-ui && mv ./node_modules ./react-ui
+RUN chsh -s /usr/sbin/nologin root
 
-WORKDIR /react-ui
+WORKDIR /usr/api
+
+COPY requirements.txt requirements.txt 
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . .
 
-RUN npm run build
+EXPOSE 8000
 
-
-FROM nginx:alpine
-
-
-#!/bin/sh
-
-COPY ./.nginx/nginx.conf /etc/nginx/nginx.conf
-
-COPY --from=builder /react-ui/build /usr/share/nginx/html
-
-EXPOSE 3000 80
-
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
